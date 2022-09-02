@@ -9,6 +9,13 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/DiceClub/[Ll]ibrary/
+/DiceClub/[Tt]emp/
+/DiceClub/[Oo]bj/
+/DiceClub/[Bb]uild/
+/DiceClub/[Bb]uilds/
+/DiceClub/[Ll]ogs/
+/DiceClub/[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
