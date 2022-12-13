@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         return commander[num - 1];
     }
 
-    //expects value 1 or 2
+    //expects value 1 or 2 and a commander
     public static bool SetCommander(int num, Commander comm)
     {
         commander[num - 1] = comm;

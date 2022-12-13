@@ -310,6 +310,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardPrefab: {fileID: 3799718868689769890, guid: 011b8ab89587036419b177c0c87dbdb2, type: 3}
   tilePrefab: {fileID: 8084470073149060185, guid: a6afb7910d1e6ed4d8fd0d612ef6f8a4, type: 3}
+  boardLength: 13
+  boardHeight: 19
 --- !u!4 &966689022
 Transform:
   m_ObjectHideFlags: 0

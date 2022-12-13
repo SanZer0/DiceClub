@@ -8,6 +8,9 @@ public class Tile : MonoBehaviour
     //save the piece that is on the field
     Piece piece = null;
     int affiliation = -1;
+    int highlight = 0;
+    int showed = 0;
+    Color m_color = Color.black;
 
     #region Start&Update
     // Start is called before the first frame update
@@ -19,7 +22,13 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(highlight != 0 && showed == 0) {
+            showed = 1;
+            ShowColor(Color.green);
+        } else if(showed == 1 && highlight == 0) {
+            showed = 0;
+            ShowColor(m_color);
+        }
     }
     #endregion
 
@@ -45,7 +54,7 @@ public class Tile : MonoBehaviour
                                                           gameObject.transform.position.z),
                                                           Quaternion.identity);
     }
-
+    //Set the affiliation of the tile, so which team owns that tile
     public void SetAffiliation(int team)
     {
         affiliation = team;
@@ -74,7 +83,11 @@ public class Tile : MonoBehaviour
     //set the color of the current tile
     void SetColor(Color color)
     {
-        //damn
+        m_color = color;
+        ShowColor(color);
+    }
+
+    void ShowColor(Color color) {
         gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Image>().color = color;
     }
 }
