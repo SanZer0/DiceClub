@@ -6,9 +6,6 @@ using System;
 
 public class BoardManager2D : MonoBehaviour
 {
-    public Camera camera;
-    public GameObject boardPrefab;
-    GameObject boardCanvas;
     public GameObject tilePrefab;
     GameObject[,] boardTiles;
     
@@ -29,10 +26,6 @@ public class BoardManager2D : MonoBehaviour
     {
         this.transform.SetPositionAndRotation(new Vector3((boardLength/2) * 50, (boardHeight/2) * 50, 0), Quaternion.identity);
         SetupBoard();
-        PlaceDice(3, 3, Enums.DiceForm.line_norm, 1, 0);
-        PlaceDice(10, 3, Enums.DiceForm.line_norm, 2, 1);
-        PlaceDice(3, 10, Enums.DiceForm.line_norm, 1, 2);
-        PlaceDice(10, 10, Enums.DiceForm.line_norm, 2, 3);
     }
 
     // Update is called once per frame
@@ -63,31 +56,22 @@ public class BoardManager2D : MonoBehaviour
             waitCounter = WAITTIME;
             blockSwitch = true;
         }
+        if (Input.GetMouseButtonDown(0)) { }
         
         
     }
     //Setup a 13x19 big board
-    async void SetupBoard()
+    void SetupBoard()
     {
-        if (boardCanvas != null)
-        {
-            Destroy(boardCanvas);
-        }
-        //Create new board with canvas to display the tiles
-        boardCanvas = Instantiate(boardPrefab);
-        boardCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
-        boardCanvas.GetComponent<Canvas>().worldCamera = camera;
-
-        //this position just works, might need to learn why, expecting it to go the other
-        boardCanvas.transform.SetPositionAndRotation(new Vector3(((int)boardLength/2) * 50, ((int)boardHeight/2) * 50, 0), Quaternion.identity);
-
         //Create the tiles via the prefab
         boardTiles = new GameObject[boardLength, boardHeight];
-        //i row, j column
+        //i column, j row
         for (int i = 0; i < boardLength; i++)
         {
             for (int j = 0; j < boardHeight; j++)
             {
+                x_sel = -1;
+                y_sel = -1;
                 Vector3 position = new Vector3(i - boardLength/2, j - boardHeight/2, 0); 
                 boardTiles[i, j] = Instantiate(tilePrefab, position, Quaternion.identity);
                 boardTiles[i, j].name = "Tile " + (i) + " " + (j);
@@ -97,7 +81,6 @@ public class BoardManager2D : MonoBehaviour
             }
             Debug.Log("Finished row " + (i));
         }
-
         //place the commanders on their fields
         Debug.Log("Placing Commanders");
         PlacePiece(((int)boardLength/2), 0, GameManager.GetCommander(1));
