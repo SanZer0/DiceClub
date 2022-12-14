@@ -5,12 +5,19 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
+    BoardManager2D board;
     //save the piece that is on the field
     Piece piece = null;
-    int affiliation = -1;
-    int highlight = 0;
+    int affiliation = 0;
+    [HideInInspector]
+    public int highlight = 0;
     int showed = 0;
-    Color m_color = Color.black;
+    int x_coord, y_coord;
+    public void SetCoordinates(int x, int y) {
+        x_coord = x;
+        y_coord = y;
+    }
+    Color m_color = Color.white;
 
     #region Start&Update
     // Start is called before the first frame update
@@ -24,6 +31,16 @@ public class Tile : MonoBehaviour
     {
         if(highlight != 0 && showed == 0) {
             showed = 1;
+            switch(affiliation) {
+                case 0: ShowColor(Color.green);
+                        break;
+                case 1: ShowColor(new Color(1.0f, 0.6f, 0.0f));
+                        break;
+                case 2: ShowColor(new Color(0.0f, 1.0f, 0.8f));
+                        break;
+                default:   ShowColor(Color.white);
+                                break; 
+            }
             ShowColor(Color.green);
         } else if(showed == 1 && highlight == 0) {
             showed = 0;
@@ -61,7 +78,7 @@ public class Tile : MonoBehaviour
         switch (affiliation)
         {
             case 0:
-                SetColor(Color.black);
+                SetColor(Color.white);
                 break;
             case 1:
                 SetColor(Color.blue);
@@ -88,6 +105,20 @@ public class Tile : MonoBehaviour
     }
 
     void ShowColor(Color color) {
-        gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Image>().color = color;
+        gameObject.GetComponent<SpriteRenderer>().color = color;
+    }
+
+    public void SetBoard(BoardManager2D boardManager) {
+        board = boardManager;
+    }
+    //Gets called when the mouse enters the hitbox
+    void OnMouseEnter() {
+        board.SetSelection(x_coord, y_coord);
+        highlight = 1;
+    }
+    //Gets called when the mouse leaves the hitbox
+    void OnMouseExit() {
+        board.SetSelection(-1, -1);
+        highlight = 0;
     }
 }

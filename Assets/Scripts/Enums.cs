@@ -1,3 +1,4 @@
+using System;
 public class Enums {
     public enum DiceForm {
         cross_norm,
@@ -9,6 +10,16 @@ public class Enums {
         stairs_norm,
         stairs_rev,
         line_norm,
-        line_rev,
+        line_rev
+    }
+    //self explanatory
+    public static DiceForm GetNextEnumValueOf(DiceForm value)
+    {
+        int size = Enum.GetNames(typeof (DiceForm)).Length;
+        int newValue = (int)value + 1;
+        if(newValue == size) {
+            newValue = 0;
+        }
+        return (DiceForm) newValue;
     }
 }
