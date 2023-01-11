@@ -8,15 +8,9 @@ public class BoardManager2D : MonoBehaviour
 {
     public GameObject tilePrefab;
     GameObject[,] boardTiles;
-    
-    public int x_sel = -1, y_sel = -1;
+    int x_sel = -1, y_sel = -1;
     public int boardLength = 13;
-    public int boardHeight = 19;
-
-    //boolean to block the switch action (change form or rotation)
-    bool blockSwitch = false;
-    const float WAITTIME = 0.25f;
-    float waitCounter = WAITTIME;
+    public int boardHeight = 19;    
 
     Enums.DiceForm currentForm = Enums.DiceForm.cross_norm;
     int currentRotation = 0;
@@ -29,35 +23,9 @@ public class BoardManager2D : MonoBehaviour
     }
 
     // Update is called once per frame
+    // TODO: This needs to be transported into the game manager
     void Update()
     {
-        UnShowDice();
-        currentCoords = GetFormCoords(x_sel, y_sel, currentForm, currentRotation);
-        try{
-            ShowDice();
-        } catch (IndexOutOfRangeException e) {
-            if(x_sel != -1  || y_sel != -1) {
-                boardTiles[x_sel, y_sel].GetComponent<Tile>().highlight = 1;
-            }
-        }
-        //input to change form and rotation
-        if(waitCounter > 0 && blockSwitch) {
-            waitCounter -= Time.deltaTime;
-        } else if (waitCounter <= 0){
-            blockSwitch = false;
-        }
-        if (Input.GetKey(KeyCode.Tab) && !blockSwitch) {
-            currentForm = Enums.GetNextEnumValueOf(currentForm);
-            waitCounter = WAITTIME;
-            blockSwitch = true;
-        }
-        if (Input.GetKey("q") && !blockSwitch) {
-            currentRotation = (currentRotation + 1) % 4;
-            waitCounter = WAITTIME;
-            blockSwitch = true;
-        }
-        if (Input.GetMouseButtonDown(0)) { }
-        
         
     }
     //Setup a 13x19 big board
@@ -89,7 +57,9 @@ public class BoardManager2D : MonoBehaviour
         PlacePiece(((int)boardLength/2), boardHeight - 1, GameManager.GetCommander(2));
         SetAffiliation(((int)boardLength/2), boardHeight - 1, 2);
     }
-    void ShowDice() {
+
+    //Sets highlight to 1 for the current coordinates
+    public void HighlightDice() {
         foreach(int[] tileCoords in currentCoords) {
             if(tileCoords[0] < 0 || tileCoords[0] >= boardLength || tileCoords[1] < 0 || tileCoords[1] >= boardHeight) {
                 throw new IndexOutOfRangeException("Indexes for DiceForm are not on the board");
@@ -99,9 +69,15 @@ public class BoardManager2D : MonoBehaviour
             boardTiles[tileCoords[0], tileCoords[1]].GetComponent<Tile>().highlight = 1;
         }
     }
+    //Sets highlight to 1 for the current tile
+    public void HighlightTile() {
+        if(x_sel != -1  || y_sel != -1) {
+                boardTiles[x_sel, y_sel].GetComponent<Tile>().highlight = 1;
+            }
+    }
     //find a better name
     //sets highlight to 0 for the current coordinates
-    void UnShowDice() {
+    public void UnShowDice() {
         foreach(int[] tileCoords in currentCoords) {
             if(tileCoords[0] < 0 || tileCoords[0] >= boardLength || tileCoords[1] < 0 || tileCoords[1] >= boardHeight) {
                 //throw new IndexOutOfRangeException("Indexes for DiceForm are not on the board");
@@ -112,15 +88,40 @@ public class BoardManager2D : MonoBehaviour
             boardTiles[tileCoords[0], tileCoords[1]].GetComponent<Tile>().highlight = 0;
         }
     }
+
+    //Place a dice form on the board with current variables
+    public bool PlaceDice(int team) {
+        return PlaceDice(x_sel, y_sel, currentForm, team, currentRotation);
+    }
     //Place a dice form on the board
+    //This only works if any of the adjacent tiles already has that affiliation
     bool PlaceDice(int x, int y, Enums.DiceForm form, int team, int rotation = 0) {
         int[][] formCoords = GetFormCoords(x, y, form, rotation);
-        SetAffiliation(formCoords, team);
-        return true;
+        foreach(int[] coords in formCoords) {
+            if(coords[0] < 0 || coords[0] >= boardLength) { // x out of range
+                return false;
+            }
+            if(coords[1] < 0 || coords[1] >= boardHeight) { // y out of range
+                return false;
+            }
+            if(GetAffiliation(coords[0], coords[1]) != 0) { // a block is already set
+                return false;
+            }
+        }
+        foreach(int[] coords in formCoords) { //check for adjacent affiliated tile
+            if(GetAffiliation(coords[0] - 1, coords[1]) == team 
+                        || GetAffiliation(coords[0], coords[1] - 1) == team 
+                        || GetAffiliation(coords[0] + 1, coords[1]) == team 
+                        || GetAffiliation(coords[0], coords[1] + 1) == team) {
+                SetAffiliation(formCoords, team);
+                return true;
+            }
+        }
+        return false;
     }
     //Place a piece onto the board
     //Expects x and y values from 1 to 19/13
-    bool PlacePiece(int x, int y, Piece piece)
+    public bool PlacePiece(int x, int y, Piece piece)
     {
         Tile tile = boardTiles[x, y].GetComponent<Tile>();
         if (tile.HasPiece())
@@ -148,6 +149,21 @@ public class BoardManager2D : MonoBehaviour
         }
         return true;
     }
+
+    //Set the form to the next one
+    public bool NextForm() {
+        currentForm = Enums.GetNextEnumValueOf(currentForm);
+        return true;
+    }
+
+    //Set the rotation to the next one
+    public bool NextRotation(int direction = 1) {
+        currentRotation = (currentRotation + direction) % 4;
+        if(currentRotation < 0) {
+            currentRotation += 4;
+        }
+        return true;
+    }
     //Set which team a field is assigned to
     bool SetAffiliation(int x, int y, int team, bool force = true)
     {
@@ -165,9 +181,26 @@ public class BoardManager2D : MonoBehaviour
         y_sel = y;
         return true;
     } 
-    int GetAffiliation(int x, int y)
+    //Set the coordinates of the current form-selection according to the variables saved in the boardmanager
+    public bool SetCurrentCoords() {
+        currentCoords = GetFormCoords(x_sel, y_sel, currentForm, currentRotation);
+        return true;
+    }
+    //Set the coordinates of the current form-selection
+    public bool SetCurrentCoords(int[][] coords) {
+        this.currentCoords = coords;
+        return true;
+    }
+
+    //Get the affiliation of the tile at x y
+    //returns -1 if the index is out of range
+    public int GetAffiliation(int x, int y)
     {
-        return boardTiles[x - 1, y - 1].GetComponent<Tile>().GetAffiliation();
+        try {
+            return boardTiles[x, y].GetComponent<Tile>().GetAffiliation();
+        } catch(IndexOutOfRangeException e) {
+            return -1;
+        }
     }
 
     //Get the coordinates of a form corresponding to the form and given coordinates

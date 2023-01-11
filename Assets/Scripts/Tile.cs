@@ -29,21 +29,18 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(highlight != 0 && showed == 0) {
-            showed = 1;
+        if(highlight != 0) {
             switch(affiliation) {
                 case 0: ShowColor(Color.green);
                         break;
-                case 1: ShowColor(new Color(1.0f, 0.6f, 0.0f));
+                case 1: ShowColor(Color.yellow);
                         break;
-                case 2: ShowColor(new Color(0.0f, 1.0f, 0.8f));
+                case 2: ShowColor(Color.yellow);
                         break;
                 default:   ShowColor(Color.white);
                                 break; 
             }
-            ShowColor(Color.green);
-        } else if(showed == 1 && highlight == 0) {
-            showed = 0;
+        } else if(highlight == 0) {
             ShowColor(m_color);
         }
     }
