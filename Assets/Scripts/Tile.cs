@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour
     int affiliation = 0;
     [HideInInspector]
     public int highlight = 0;
-    int showed = 0;
+    //int showed = 0; - deprecated
     int x_coord, y_coord;
     public void SetCoordinates(int x, int y) {
         x_coord = x;

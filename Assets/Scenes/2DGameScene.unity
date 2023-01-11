@@ -294,7 +294,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &96456961
 MonoBehaviour:
@@ -723,8 +723,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 338.57996, y: -81.41997}
-  m_SizeDelta: {x: -1712.28, y: -862.68}
+  m_AnchoredPosition: {x: 338.57996, y: -27.619995}
+  m_SizeDelta: {x: -1712.28, y: -970.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &629127587
 MonoBehaviour:
@@ -854,8 +854,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16961663b861fc64bae5ff6a4881e3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 519420031}
-  boardPrefab: {fileID: 3799718868689769890, guid: 011b8ab89587036419b177c0c87dbdb2, type: 3}
   tilePrefab: {fileID: 8084470073149060185, guid: a6afb7910d1e6ed4d8fd0d612ef6f8a4, type: 3}
   boardLength: 13
   boardHeight: 19

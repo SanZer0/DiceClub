@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         board2d.SetCurrentCoords();
         try{
             board2d.HighlightDice();
-        } catch (IndexOutOfRangeException e) {
+        } catch (IndexOutOfRangeException) {
             board2d.HighlightTile();
         }
         //input to change form and rotation
@@ -107,9 +107,9 @@ public class GameManager : MonoBehaviour
     void UpdatePlayerText() {
         TMP_Text textObject = playerText.GetComponent<TMP_Text>();
         switch (activePlayer) {
-            case 1: textObject.SetText("<color=blue>Player 1</color>");
+            case 1: textObject.SetText("<color=blue>PLAYER 1</color>");
                     break;
-            case 2: textObject.SetText("<color=red>Player 2</color>");
+            case 2: textObject.SetText("<color=red>PLAYER 2</color>");
                     break;
             default: break;
         }

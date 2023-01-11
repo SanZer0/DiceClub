@@ -198,7 +198,7 @@ public class BoardManager2D : MonoBehaviour
     {
         try {
             return boardTiles[x, y].GetComponent<Tile>().GetAffiliation();
-        } catch(IndexOutOfRangeException e) {
+        } catch(IndexOutOfRangeException) {
             return -1;
         }
     }
@@ -304,7 +304,7 @@ public class BoardManager2D : MonoBehaviour
                 default: 
                     return null;
             }
-        } catch(IndexOutOfRangeException e) {
+        } catch(IndexOutOfRangeException) {
             return null;
         }
     }
