@@ -12,6 +12,24 @@ public class Enums {
         line_norm,
         line_rev
     }
+
+    public enum Type {
+        spellcaster,
+        warrior,
+        undead,
+        beast,
+        dragon,
+        magic
+    }
+
+    public enum Crest {
+        summon,
+        movement,
+        magic,
+        attack,
+        defense,
+        trap
+    }
     //self explanatory
     public static DiceForm GetNextEnumValueOf(DiceForm value)
     {

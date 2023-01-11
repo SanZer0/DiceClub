@@ -43,9 +43,9 @@ public class BoardManager2D : MonoBehaviour
                 Vector3 position = new Vector3(i - boardLength/2, j - boardHeight/2, 0); 
                 boardTiles[i, j] = Instantiate(tilePrefab, position, Quaternion.identity);
                 boardTiles[i, j].name = "Tile " + (i) + " " + (j);
-                boardTiles[i, j].GetComponent<Tile>().SetBoard(this);
+                boardTiles[i, j].GetComponent<Tile>().Board = this;
                 boardTiles[i, j].transform.SetParent(this.transform);
-                boardTiles[i, j].GetComponent<Tile>().SetCoordinates(i, j);
+                boardTiles[i, j].GetComponent<Tile>().Coordinates = new int[] {i, j};
             }
             Debug.Log("Finished row " + (i));
         }
@@ -172,7 +172,7 @@ public class BoardManager2D : MonoBehaviour
             //Affiliation already set
             return false;
         }
-        boardTiles[x, y].GetComponent<Tile>().SetAffiliation(team);
+        boardTiles[x, y].GetComponent<Tile>().Affiliation = team;
         return true;
     }
     //set the selection
@@ -197,7 +197,7 @@ public class BoardManager2D : MonoBehaviour
     public int GetAffiliation(int x, int y)
     {
         try {
-            return boardTiles[x, y].GetComponent<Tile>().GetAffiliation();
+            return boardTiles[x, y].GetComponent<Tile>().Affiliation;
         } catch(IndexOutOfRangeException) {
             return -1;
         }

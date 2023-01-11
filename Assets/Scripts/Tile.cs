@@ -5,32 +5,48 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
-    BoardManager2D board;
+    public BoardManager2D Board {get; set;}
     //save the piece that is on the field
     Piece piece = null;
-    int affiliation = 0;
+    private int _affiliation = 0;
+    public int Affiliation {get {return _affiliation;} 
+                    set {
+                        _affiliation = value;
+                        switch (Affiliation)
+                        {
+                            case 0:
+                                SetColor(Color.white);
+                                break;
+                            case 1:
+                                SetColor(Color.blue);
+                                break;
+                            case 2:
+                                SetColor(Color.red);
+                                break;
+                            default:
+                                SetColor(new Color(0.32f, 0.32f, 0.41f));
+                                break;
+                        }
+                    }
+                }
     [HideInInspector]
     public int highlight = 0;
     //int showed = 0; - deprecated
-    int x_coord, y_coord;
-    public void SetCoordinates(int x, int y) {
-        x_coord = x;
-        y_coord = y;
-    }
+    public int[] Coordinates {get; set;}
     Color m_color = Color.white;
 
     #region Start&Update
     // Start is called before the first frame update
     void Start()
     {
-            
+
     }
 
     // Update is called once per frame
     void Update()
     {
         if(highlight != 0) {
-            switch(affiliation) {
+            switch(Affiliation) {
                 case 0: ShowColor(Color.green);
                         break;
                 case 1: ShowColor(Color.yellow);
@@ -65,33 +81,8 @@ public class Tile : MonoBehaviour
         //probably better ways FIX
         piece.gameObject.transform.SetPositionAndRotation(new Vector3(gameObject.transform.position.x,
                                                           gameObject.transform.position.y,
-                                                          gameObject.transform.position.z),
+                                                          gameObject.transform.position.z + 1),
                                                           Quaternion.identity);
-    }
-    //Set the affiliation of the tile, so which team owns that tile
-    public void SetAffiliation(int team)
-    {
-        affiliation = team;
-        switch (affiliation)
-        {
-            case 0:
-                SetColor(Color.white);
-                break;
-            case 1:
-                SetColor(Color.blue);
-                break;
-            case 2:
-                SetColor(Color.red);
-                break;
-            default:
-                SetColor(new Color(0.32f, 0.32f, 0.41f));
-                break;
-        }
-    }
-
-    public int GetAffiliation()
-    {
-        return affiliation;
     }
 
     //set the color of the current tile
@@ -104,18 +95,14 @@ public class Tile : MonoBehaviour
     void ShowColor(Color color) {
         gameObject.GetComponent<SpriteRenderer>().color = color;
     }
-
-    public void SetBoard(BoardManager2D boardManager) {
-        board = boardManager;
-    }
     //Gets called when the mouse enters the hitbox
     void OnMouseEnter() {
-        board.SetSelection(x_coord, y_coord);
+        Board.SetSelection(Coordinates[0], Coordinates[1]);
         highlight = 1;
     }
     //Gets called when the mouse leaves the hitbox
     void OnMouseExit() {
-        board.SetSelection(-1, -1);
+        Board.SetSelection(-1, -1);
         highlight = 0;
     }
 }
